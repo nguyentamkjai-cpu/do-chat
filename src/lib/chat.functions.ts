@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { readSite } from "@/lib/site.functions";
 
 type Turn = { role: "user" | "assistant"; content: string };
 
@@ -31,6 +32,7 @@ export const sendMessage = createServerFn({ method: "POST" })
       return { ok: false as const, error: "Trợ lý chưa sẵn sàng trong môi trường này." };
     }
 
+    const site = await readSite();
     const res = await fetch("https://api.x.ai/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -43,8 +45,7 @@ export const sendMessage = createServerFn({ method: "POST" })
         messages: [
           {
             role: "system",
-            content:
-              "Bạn là Đỏ, trợ lý hội thoại. Trả lời ngắn, rõ, bằng tiếng Việt trừ khi người dùng viết ngôn ngữ khác. Không bịa nguồn. Nếu không chắc, nói thẳng.",
+            content: site.systemPrompt,
           },
           ...data,
         ],
