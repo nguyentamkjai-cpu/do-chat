@@ -1,14 +1,16 @@
 # Đỏ
 
-Trợ lý hội thoại, giao diện tối. Câu trả lời đi qua API của xAI (model `grok-4.5`). Khóa `XAI_API_KEY` chỉ nằm trên server, không gửi ra trình duyệt.
+Trợ lý hội thoại, giao diện tối.
 
-Hội thoại lưu trong `localStorage` của trình duyệt.
+Trang trên GitHub Pages: https://nguyentamkjai-cpu.github.io/do-chat/
 
-## Chạy
+Lần đầu mở, dán khóa [xAI](https://console.x.ai) vào menu. Khóa chỉ lưu trên trình duyệt, không nằm trong repo.
+
+## Chạy mã nguồn
 
 ```bash
 npm install
 XAI_API_KEY=your_key npm run dev
 ```
 
-Mở trang chủ, bấm **Bắt đầu**, rồi nhắn tin.
+Mở http://localhost:8080, bấm **Bắt đầu**, rồi nhắn tin.

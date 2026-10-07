@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Đỏ</title>
+  <meta name="description" content="Trợ lý hội thoại tối." />
+  <meta name="theme-color" content="#070707" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23e11d2e'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-size='16' fill='white' font-family='sans-serif'%3EĐ%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,680&family=Manrope:wght@400;500;600;700&display=swap" />
+  <style>
+    :root {
+      --bg: #070707;
+      --surface: #120c0c;
+      --surface-2: #1c1212;
+      --fg: #f5f2f0;
+      --muted: #a89e98;
+      --primary: #e11d2e;
+      --border: #2c2222;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; background: var(--bg); color: var(--fg); font-family: Manrope, system-ui, sans-serif; line-height: 1.5; }
+    button { font: inherit; cursor: pointer; }
+    button:disabled { cursor: default; }
+    .landing { min-height: 100%; display: flex; flex-direction: column; }
+    header.bar { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; }
+    .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+    .mark { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 8px; background: var(--primary); color: white; font-size: 14px; }
+    .ghost { border: 1px solid var(--border); background: transparent; color: var(--fg); border-radius: 999px; padding: 8px 16px; }
+    .hero { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px 24px 64px; }
+    .kicker { color: var(--primary); letter-spacing: 0.22em; font-size: 12px; font-weight: 600; margin: 0 0 20px; }
+    h1 { font-family: Fraunces, Georgia, serif; font-size: 72px; line-height: 1; margin: 0; font-weight: 560; }
+    .lead { max-width: 28rem; color: var(--muted); }
+    .cta { margin-top: 32px; border: 0; border-radius: 999px; background: var(--primary); color: white; padding: 12px 24px; font-weight: 600; }
+    .app { height: 100dvh; display: flex; min-height: 0; }
+    aside { width: 288px; background: var(--surface); border-right: 1px solid var(--border); padding: 16px; display: flex; flex-direction: column; }
+    .new { height: 44px; width: 100%; border: 0; border-radius: 12px; background: var(--primary); color: white; font-weight: 600; margin: 16px 0; }
+    nav { flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 4px; }
+    nav button { text-align: left; border: 0; background: transparent; color: var(--muted); border-radius: 12px; padding: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    nav button.on { background: var(--surface-2); color: var(--fg); }
+    .foot { border-top: 1px solid var(--border); padding-top: 12px; color: var(--muted); font-size: 12px; }
+    main.chat { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .top { height: 56px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding: 0 12px; color: var(--muted); font-size: 14px; }
+    .icon { width: 44px; height: 44px; border: 0; background: transparent; color: var(--fg); border-radius: 8px; display: none; }
+    .msgs { flex: 1; overflow: auto; padding: 24px 16px; }
+    .col { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+    .empty { text-align: center; padding-top: 64px; }
+    .empty h2 { font-family: Fraunces, Georgia, serif; font-weight: 560; font-size: 30px; margin: 0; }
+    .suggest { width: 100%; text-align: left; border: 1px solid var(--border); background: var(--surface); color: var(--fg); border-radius: 16px; padding: 12px 16px; margin-top: 8px; }
+    .row { display: flex; gap: 12px; }
+    .av { width: 32px; height: 32px; flex: none; display: grid; place-items: center; border-radius: 8px; font-size: 12px; font-weight: 700; }
+    .av.u { background: var(--surface-2); }
+    .av.b { background: var(--primary); }
+    .bubble { flex: 1; white-space: pre-wrap; border: 1px solid var(--border); background: var(--surface); border-radius: 16px; padding: 12px 16px; font-size: 14px; }
+    .status { color: var(--muted); font-size: 14px; }
+    .err { color: var(--primary); font-size: 14px; }
+    form { padding: 0 16px 16px; }
+    .box { max-width: 640px; margin: 0 auto; display: flex; gap: 8px; align-items: end; border: 1px solid var(--border); background: var(--surface); border-radius: 16px; padding: 8px; }
+    textarea { flex: 1; min-height: 44px; max-height: 160px; resize: none; border: 0; background: transparent; color: var(--fg); padding: 8px; font: inherit; outline: none; }
+    .send { width: 44px; height: 44px; border: 0; border-radius: 12px; background: var(--primary); color: white; font-size: 18px; }
+    .send:disabled { opacity: 0.4; }
+    .key { display: flex; gap: 8px; margin-bottom: 12px; }
+    .key input { flex: 1; border: 1px solid var(--border); background: var(--bg); color: var(--fg); border-radius: 10px; padding: 8px 10px; font: inherit; }
+    .shade { display: none; }
+    @media (max-width: 800px) {
+      aside { display: none; position: fixed; inset: 0 auto 0 0; z-index: 20; }
+      aside.open { display: flex; }
+      .shade.show { display: block; position: fixed; inset: 0; background: rgba(7,7,7,.7); z-index: 10; }
+      .icon { display: grid; place-items: center; }
+      h1 { font-size: 56px; }
+    }
+  </style>
+</head>
+<body>
+  <section class="landing" id="landing">
+    <header class="bar">
+      <div class="brand"><span class="mark">Đ</span> Đỏ</div>
+      <button class="ghost" id="enterTop" type="button">Vào chat</button>
+    </header>
+    <div class="hero">
+      <p class="kicker">TRỢ LÝ HỘI THOẠI</p>
+      <h1>Đỏ</h1>
+      <p class="lead">Khung chat tối. Lần đầu dán khóa xAI, khóa chỉ lưu trên trình duyệt này.</p>
+      <button class="cta" id="enter" type="button">Bắt đầu</button>
+    </div>
+  </section>
+  <section class="app" id="app" hidden>
+    <div class="shade" id="shade"></div>
+    <aside id="side">
+      <div class="brand"><span class="mark">Đ</span> Đỏ</div>
+      <button class="new" id="new" type="button">+ Cuộc mới</button>
+      <nav id="nav"></nav>
+      <div class="key">
+        <input id="key" type="password" placeholder="Khóa xAI" autocomplete="off" />
+        <button class="ghost" id="saveKey" type="button">Lưu</button>
+      </div>
+      <p class="foot">Khóa và hội thoại nằm trên trình duyệt này.</p>
+    </aside>
+    <main class="chat">
+      <div class="top">
+        <button class="icon" id="menu" type="button" aria-label="Mở menu">☰</button>
+        <span>Grok</span>
+      </div>
+      <div class="msgs" id="msgs"><div class="col" id="col"></div></div>
+      <form id="form">
+        <div class="box">
+          <textarea id="draft" rows="1" placeholder="Nhắn cho Đỏ…"></textarea>
+          <button class="send" id="send" type="submit" aria-label="Gửi">↑</button>
+        </div>
+      </form>
+    </main>
+  </section>
+  <script>
+    const STORE = "do-pages-v1";
+    const KEY = "do-xai-key";
+    const SUGGESTIONS = [
+      "Giải thích RAG trong năm dòng.",
+      "Viết hàm Python đảo chuỗi, có type hint.",
+      "Tóm tắt cách một web chat hoạt động."
+    ];
+    let threads = [];
+    let activeId = null;
+    let busy = false;
+    const $ = (id) => document.getElementById(id);
+
+    function load() {
+      try { threads = JSON.parse(localStorage.getItem(STORE) || "[]"); } catch { threads = []; }
+      if (!Array.isArray(threads)) threads = [];
+      activeId = threads[0]?.id || null;
+    }
+    function save() { localStorage.setItem(STORE, JSON.stringify(threads)); }
+    function active() { return threads.find((t) => t.id === activeId); }
+
+    function enter() {
+      $("landing").hidden = true;
+      $("app").hidden = false;
+      if (!activeId) start();
+      $("key").value = localStorage.getItem(KEY) || "";
+      render();
+    }
+    function start() {
+      const thread = { id: crypto.randomUUID(), title: "Cuộc trò chuyện mới", messages: [] };
+      threads.unshift(thread);
+      activeId = thread.id;
+      save();
+      closeSide();
+      render();
+    }
+    function closeSide() {
+      $("side").classList.remove("open");
+      $("shade").classList.remove("show");
+    }
+    function render() {
+      $("nav").innerHTML = threads.map((t) =>
+        `<button type="button" data-id="${t.id}" class="${t.id === activeId ? "on" : ""}">${escapeHtml(t.title)}</button>`
+      ).join("");
+      const thread = active();
+      const col = $("col");
+      if (!thread || thread.messages.length === 0) {
+        col.innerHTML = `<div class="empty"><h2>Hỏi Đỏ</h2><p class="status">Chọn một gợi ý hoặc gõ câu của bạn.</p>${
+          SUGGESTIONS.map((s) => `<button class="suggest" type="button" data-q="${escapeHtml(s)}">${escapeHtml(s)}</button>`).join("")
+        }</div>`;
+      } else {
+        col.innerHTML = thread.messages.map((m) => `
+          <article class="row">
+            <div class="av ${m.role === "user" ? "u" : "b"}">${m.role === "user" ? "B" : "Đ"}</div>
+            <p class="bubble">${escapeHtml(m.content)}</p>
+          </article>`).join("") + (busy ? `<p class="status">Đang trả lời…</p>` : "") + `<p class="err" id="err"></p>`;
+      }
+      $("msgs").scrollTop = $("msgs").scrollHeight;
+    }
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, (c) => ({ "&": "&", "<": "<", ">": ">", '"': """, "'": "&#39;" }[c]));
+    }
+    function showError(message) {
+      let el = $("err");
+      if (!el) {
+        el = document.createElement("p");
+        el.id = "err";
+        el.className = "err";
+        $("col").appendChild(el);
+      }
+      el.textContent = message;
+    }
+    async function ask(text) {
+      const content = text.trim();
+      if (!content || busy) return;
+      const apiKey = localStorage.getItem(KEY);
+      if (!apiKey) {
+        $("side").classList.add("open");
+        $("shade").classList.add("show");
+        showError("Dán khóa xAI ở menu bên trái, rồi bấm Lưu.");
+        return;
+      }
+      let thread = active();
+      if (!thread) start();
+      thread = active();
+      const id = thread.id;
+      const history = [...thread.messages, { role: "user", content }].slice(-12);
+      if (thread.messages.length === 0) thread.title = content.slice(0, 42);
+      thread.messages.push({ role: "user", content });
+      $("draft").value = "";
+      busy = true;
+      save();
+      render();
+      try {
+        const res = await fetch("https://api.x.ai/v1/chat/completions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: "Bearer " + apiKey },
+          body: JSON.stringify({
+            model: "grok-4.5",
+            max_tokens: 700,
+            messages: [
+              { role: "system", content: "Bạn là Đỏ, trợ lý hội thoại. Trả lời ngắn, rõ, bằng tiếng Việt trừ khi người dùng viết ngôn ngữ khác. Không bịa nguồn. Nếu không chắc, nói thẳng." },
+              ...history
+            ]
+          })
+        });
+        const body = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(body.error?.message || "Không trả lời được. Kiểm tra lại khóa.");
+        const reply = body.choices?.[0]?.message?.content?.trim();
+        if (!reply) throw new Error("Câu trả lời trống.");
+        const current = threads.find((t) => t.id === id);
+        current.messages.push({ role: "assistant", content: reply });
+        save();
+      } catch (err) {
+        busy = false;
+        render();
+        showError(err.message || "Không trả lời được.");
+        return;
+      }
+      busy = false;
+      render();
+    }
+
+    $("enter").onclick = enter;
+    $("enterTop").onclick = enter;
+    $("new").onclick = start;
+    $("menu").onclick = () => { $("side").classList.add("open"); $("shade").classList.add("show"); };
+    $("shade").onclick = closeSide;
+    $("saveKey").onclick = () => {
+      const value = $("key").value.trim();
+      if (value) localStorage.setItem(KEY, value);
+      else localStorage.removeItem(KEY);
+      closeSide();
+    };
+    $("nav").onclick = (e) => {
+      const id = e.target.dataset?.id;
+      if (!id) return;
+      activeId = id;
+      closeSide();
+      render();
+    };
+    $("col").onclick = (e) => {
+      const q = e.target.dataset?.q;
+      if (q) ask(q);
+    };
+    $("form").onsubmit = (e) => { e.preventDefault(); ask($("draft").value); };
+    $("draft").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); ask($("draft").value); }
+    });
+    load();
+  </script>
+</body>
+</html>
